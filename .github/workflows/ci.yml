@@ -80,9 +80,9 @@ jobs:
     # ADJUST: use the same variable names as your .env.example.
     # Every variable your app validates on startup must be here.
     env:
-      APP_PORT: 3000
-      APP_NODE: test
-      CORS_ORIGIN: http://localhost:5173
+      NODE_ENV: test
+      HOST: localhost
+      PORT: 3020
       DB_HOST: localhost
       DB_PORT: 5432
       DB_USER: postgres
