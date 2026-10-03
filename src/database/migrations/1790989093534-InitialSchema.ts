@@ -1,13 +1,13 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class InitialSchema1790989093534 implements MigrationInterface {
-    name = 'InitialSchema1790989093534'
+  name = 'InitialSchema1790989093534';
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`
             CREATE TYPE "public"."inventory_unit" AS ENUM('GR', 'ML', 'UN')
         `);
-        await queryRunner.query(`
+    await queryRunner.query(`
             CREATE TABLE "inventory_items" (
                 "id_inventory_items" uuid NOT NULL DEFAULT uuid_generate_v4(),
                 "code_product" character varying(50) NOT NULL,
@@ -23,10 +23,10 @@ export class InitialSchema1790989093534 implements MigrationInterface {
                 CONSTRAINT "PK_1afc62e44f359ae4c55634eb36f" PRIMARY KEY ("id_inventory_items")
             )
         `);
-        await queryRunner.query(`
+    await queryRunner.query(`
             CREATE TYPE "public"."users_user_role_enum" AS ENUM('ADMIN', 'WAITER')
         `);
-        await queryRunner.query(`
+    await queryRunner.query(`
             CREATE TABLE "users" (
                 "id_user" uuid NOT NULL DEFAULT uuid_generate_v4(),
                 "identification_number" character varying(50) NOT NULL,
@@ -44,21 +44,20 @@ export class InitialSchema1790989093534 implements MigrationInterface {
                 CONSTRAINT "PK_fbb07fa6fbd1d74bee9782fb945" PRIMARY KEY ("id_user")
             )
         `);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`
             DROP TABLE "users"
         `);
-        await queryRunner.query(`
+    await queryRunner.query(`
             DROP TYPE "public"."users_user_role_enum"
         `);
-        await queryRunner.query(`
+    await queryRunner.query(`
             DROP TABLE "inventory_items"
         `);
-        await queryRunner.query(`
+    await queryRunner.query(`
             DROP TYPE "public"."inventory_unit"
         `);
-    }
-
+  }
 }
