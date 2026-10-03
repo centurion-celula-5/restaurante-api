@@ -1,14 +1,3 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  Table,
-} from 'typeorm';
-
-@Entity()
 export class Order {}
 
 /*Guia para la elabroacon de la entidad

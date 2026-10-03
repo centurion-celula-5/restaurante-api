@@ -1,11 +1,3 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-
-@Entity()
 export class Customer {}
 
 /*Guia para la elaboración de la entidad de cliente (Customer)

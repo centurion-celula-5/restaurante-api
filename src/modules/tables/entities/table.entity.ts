@@ -1,11 +1,3 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-
-@Entity()
 export class Table {}
 
 /*Guia para crear la entidad de mesas (Table)
