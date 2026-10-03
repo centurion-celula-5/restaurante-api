@@ -1,8 +1,3 @@
-
-
-
-
-
 /*Guia del enum que se encuentra en el diagrama relacional
 
 /*export enum TableStatus {
