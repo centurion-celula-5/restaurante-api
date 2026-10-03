@@ -27,7 +27,7 @@ export class InventoryItems {
   })
   unit_base: string;
 
-  @Column({ name: 'current_stock', type: 'numeric', scale: 3, default: 0 })
+  @Column({ name: 'current_stock', type: 'numeric', precision: 12, scale: 3, default: 0 })
   current_stock: number;
 
   @Column({ name: 'is_active', type: 'boolean', default: true })
