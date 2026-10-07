@@ -5,6 +5,6 @@ import { HealthDao } from './dao/health.dao.js';
 
 @Module({
   controllers: [HealthController],
-  providers: [HealthService, HealthDao]
+  providers: [HealthService, HealthDao],
 })
 export class HealthModule {}

@@ -1,5 +1,1 @@
-
-
-export class CreateTableDto {
-
-}
+export class CreateTableDto {}

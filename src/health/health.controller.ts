@@ -18,9 +18,7 @@ export class HealthController {
    *
    * @param {HealthService} healthService Servicio de Health.
    */
-  public constructor(
-    private readonly healthService: HealthService,
-  ) {}
+  public constructor(private readonly healthService: HealthService) {}
 
   /**
    * Endpoint utilizado para verificar
