@@ -25,24 +25,24 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
-      validationSchema: envSchema
+      validationSchema: envSchema,
     }),
-    
+
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService<EnvVariables, true>) => ({
         ...createTypeOrmOptions({
-          NODE_ENV: configService.get('NODE_ENV',{infer: true}),
-          DB_HOST: configService.get('DB_HOST',{infer: true}),
-          DB_PORT: configService.get('DB_PORT',{infer: true}),
-          DB_USER: configService.get('DB_USER',{infer: true}),
-          DB_PASSWORD: configService.get('DB_PASSWORD',{infer: true}),
-          DB_NAME: configService.get('DB_NAME')
-        })
-      })
+          NODE_ENV: configService.get('NODE_ENV', { infer: true }),
+          DB_HOST: configService.get('DB_HOST', { infer: true }),
+          DB_PORT: configService.get('DB_PORT', { infer: true }),
+          DB_USER: configService.get('DB_USER', { infer: true }),
+          DB_PASSWORD: configService.get('DB_PASSWORD', { infer: true }),
+          DB_NAME: configService.get('DB_NAME'),
+        }),
+      }),
     }),
-    
+
     HealthModule,
     TablesModule,
     UsersModule,

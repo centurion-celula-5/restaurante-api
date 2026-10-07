@@ -50,11 +50,11 @@ export class OrderItem {
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   created_at: Date;
 
-  @ManyToOne(() => Order, { nullable: false, onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'order_id', referencedColumnName: 'id_order' })
-  order: Order;
+  //@ManyToOne(() => Order, { nullable: false, onDelete: 'CASCADE' })
+  //@JoinColumn({ name: 'order_id', referencedColumnName: 'id_order' })
+  //order: Order;
 
-  @ManyToOne(() => Product, { nullable: false, onDelete: 'RESTRICT' })
-  @JoinColumn({ name: 'product_id', referencedColumnName: 'id_product' })
-  product: Product;
+  //@ManyToOne(() => Product, { nullable: false, onDelete: 'RESTRICT' })
+  //@JoinColumn({ name: 'product_id', referencedColumnName: 'id_product' })
+  //product: Product;
 }

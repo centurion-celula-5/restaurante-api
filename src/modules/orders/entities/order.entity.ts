@@ -42,24 +42,24 @@ export class Order {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
   updated_at: Date;
 
-  @ManyToOne(() => Table, { nullable: false, onDelete: 'RESTRICT' })
-  @JoinColumn({ name: 'table_id', referencedColumnName: 'id_table' })
-  table: Table;
+  //@ManyToOne(() => Table, { nullable: false, onDelete: 'RESTRICT' })
+  //@JoinColumn({ name: 'table_id', referencedColumnName: 'id_table' })
+ // table: Table;
 
-  @ManyToOne(() => Reservation, { nullable: true, onDelete: 'SET NULL' })
-  @JoinColumn({
-    name: 'reservation_id',
-    referencedColumnName: 'id_reservation',
-  })
-  reservation: Reservation | null;
+  //@ManyToOne(() => Reservation, { nullable: true, onDelete: 'SET NULL' })
+  //@JoinColumn({
+  //  name: 'reservation_id',
+  //  referencedColumnName: 'id_reservation',
+  //})
+  //reservation: Reservation | null;
 
-  @ManyToOne(() => User, { nullable: false, onDelete: 'RESTRICT' })
-  @JoinColumn({
-    name: 'created_by_user_id',
-    referencedColumnName: 'id_user',
-  })
-  created_by_user: User;
+  //@ManyToOne(() => User, { nullable: false, onDelete: 'RESTRICT' })
+  //@JoinColumn({
+ //   name: 'created_by_user_id',
+ //   referencedColumnName: 'id_user',
+  //})
+  //created_by_user: User;
 
-  @OneToMany('OrderItem', (orderItem: OrderItem) => orderItem.order)
-  order_items: OrderItem[];
+  //@OneToMany('OrderItem', (orderItem: OrderItem) => orderItem.order)
+  //order_items: OrderItem[];
 }
