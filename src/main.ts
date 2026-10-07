@@ -17,20 +17,17 @@ async function bootstrap() {
     instrument: ObserveInstrument,
   });
 
-  app.useGlobalPipes(new ValidationPipe({
-    
-  }));
+  app.useGlobalPipes(new ValidationPipe({}));
   swaggerConfiguration(app);
 
-  const configService = app.get<ConfigService<EnvVariables, true>>(
-    ConfigService,
-  );
+  const configService =
+    app.get<ConfigService<EnvVariables, true>>(ConfigService);
 
   const host = configService.get<string>('HOST');
-  const port = configService.get<number>('PORT')
+  const port = configService.get<number>('PORT');
 
   await app.listen(port, host);
 
-  console.log(`Application running at ${await app.getUrl()}`)
+  console.log(`Application running at ${await app.getUrl()}`);
 }
 await bootstrap();

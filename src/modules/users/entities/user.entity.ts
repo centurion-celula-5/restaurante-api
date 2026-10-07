@@ -7,12 +7,17 @@ import {
 } from 'typeorm';
 import { UserRole } from '../enums/user-role.enum.js';
 
-@Entity({name: 'users'})
+@Entity({ name: 'users' })
 export class User {
   @PrimaryGeneratedColumn('uuid', { name: 'id_user' })
   id_user: string;
 
-  @Column({ type: 'varchar', length: 50, unique: true , name: 'identification_number' })
+  @Column({
+    type: 'varchar',
+    length: 50,
+    unique: true,
+    name: 'identification_number',
+  })
   identification_number: string;
 
   @Column({ type: 'varchar', length: 150, name: 'name_user' })
@@ -30,7 +35,12 @@ export class User {
   @Column({ type: 'varchar', length: 50, nullable: true, name: 'phone_user' })
   phone_user: string | null;
 
-  @Column({ type: 'enum', enum: UserRole, default: UserRole.WAITER, name: 'user_role' })
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.WAITER,
+    name: 'user_role',
+  })
   user_role: UserRole;
 
   @Column({ type: 'boolean', default: true, name: 'is_active' })
