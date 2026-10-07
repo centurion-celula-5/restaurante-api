@@ -31,7 +31,12 @@ export class Payment {
   @Column({ type: 'varchar', length: 50, nullable: true, name: 'status' })
   status?: string | null;
 
-  @Column({ type: 'varchar', length: 120, nullable: true, name: 'transaction_reference' })
+  @Column({
+    type: 'varchar',
+    length: 120,
+    nullable: true,
+    name: 'transaction_reference',
+  })
   transaction_reference?: string | null;
 
   @ManyToOne(() => Order, { nullable: true })
