@@ -35,16 +35,16 @@ export class MenuItem {
     default: () => 'CURRENT_TIMESTAMP',
   })
   updated_at: Date;
-  
+
   category: Category;
 
   //@OneToMany(() => Category, (category) => category.menuItems)
   //menuItems: Category[];
 
   //@JoinColumn({
-    //name: 'id_category',
-    //referencedColumnName: 'id_category',
-    //foreignKeyConstraintName: 'fk_menu_items_categories',
+  //name: 'id_category',
+  //referencedColumnName: 'id_category',
+  //foreignKeyConstraintName: 'fk_menu_items_categories',
   //})
   //Category!: Category;
 }
