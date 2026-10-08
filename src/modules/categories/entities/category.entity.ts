@@ -10,7 +10,7 @@ import { MenuItem } from '../../products/entities/menu-item.entity.js';
 
 @Entity({ name: 'categories' })
 export class Category {
-  @PrimaryGeneratedColumn('uuid', { name: 'id_category' })
+  @PrimaryGeneratedColumn('identity', { name: 'id_category', type: 'integer'})
   id_category: string;
 
   @Column({
