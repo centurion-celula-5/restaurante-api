@@ -1,4 +1,1 @@
-export enum MenuItemStatus {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-}
+export { MenuItemState as MenuItemStatus } from './menu-item-state.enum.js';
