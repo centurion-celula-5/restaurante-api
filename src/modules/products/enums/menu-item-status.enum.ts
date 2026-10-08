@@ -1,4 +1,4 @@
 export enum MenuItemStatus {
-  AVAILABLE = 'AVAILABLE',
-  UNAVAILABLE = 'UNAVAILABLE',
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
 }
