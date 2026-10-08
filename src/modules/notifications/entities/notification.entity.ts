@@ -5,27 +5,34 @@ import {
   Index,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { NotificationType } from '../enums/notification-type.enum.js';
 
-@Entity({ name: 'audit_logs' })
-export class AuditLog {
-  @PrimaryGeneratedColumn('uuid', { name: 'id_audit' })
-  id_audit!: string;
+@Entity({ name: 'notifications' })
+@Index('idx_notifications_recipient_is_read', ['recipient_user_id', 'is_read'])
+export class Notification {
+  @PrimaryGeneratedColumn('uuid', { name: 'id_notification' })
+  id_notification!: string;
 
-  @Index('idx_audit_logs_user_id')
-  @Column({ type: 'uuid', name: 'user_id' })
-  user_id!: string;
+  @Column({ type: 'uuid', name: 'recipient_user_id' })
+  recipient_user_id!: string;
 
-  @Column({ type: 'varchar', length: 30, name: 'action' })
-  action!: string;
+  @Column({ type: 'varchar', length: 150, name: 'title' })
+  title!: string;
 
-  @Column({ type: 'varchar', length: 30, name: 'entity' })
-  entity!: string;
+  @Column({ type: 'text', name: 'message' })
+  message!: string;
 
-  @Column({ type: 'varchar', length: 64, name: 'entity_id' })
-  entity_id!: string;
+  @Column({
+    type: 'enum',
+    enum: NotificationType,
+    enumName: 'notification_type',
+    default: NotificationType.SYSTEM,
+    name: 'type',
+  })
+  type!: NotificationType;
 
-  @Column({ type: 'jsonb', name: 'details' })
-  details!: Record<string, unknown>;
+  @Column({ type: 'boolean', default: false, name: 'is_read' })
+  is_read!: boolean;
 
   @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
   created_at!: Date;
