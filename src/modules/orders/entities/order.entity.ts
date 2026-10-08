@@ -12,6 +12,8 @@ import {
 } from 'typeorm';
 import type { Relation } from 'typeorm';
 import { User } from '../../users/entities/user.entity.js';
+import { Reservation } from '../../reservations/entities/reservation.entity.js';
+import { RestaurantTable } from '../../tables/entities/table.entity.js';
 import { OrderStatus } from '../enums/order-status.enum.js';
 import type { OrderItem } from './order-item.entity.js';
 
@@ -21,7 +23,6 @@ export class Order {
   @PrimaryGeneratedColumn('uuid', { name: 'id_order' })
   id_order: string;
 
-  // The Table and Reservation entities will be supplied by SPR1-03.
   @Index('IDX_orders_table_id')
   @Column('uuid', { name: 'table_id' })
   table_id: string;
@@ -55,6 +56,23 @@ export class Order {
     foreignKeyConstraintName: 'fk_orders_users',
   })
   created_by_user: Relation<User>;
+
+  @ManyToOne(() => RestaurantTable, { nullable: false, onDelete: 'RESTRICT' })
+  @JoinColumn({
+    name: 'table_id',
+    referencedColumnName: 'id_table',
+    foreignKeyConstraintName: 'fk_orders_tables',
+  })
+  table?: Relation<RestaurantTable>;
+
+  // The existing UNIQUE constraint enforces one order per reservation.
+  @ManyToOne(() => Reservation, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({
+    name: 'reservation_id',
+    referencedColumnName: 'id_reservation',
+    foreignKeyConstraintName: 'fk_orders_reservations',
+  })
+  reservation?: Relation<Reservation> | null;
 
   @OneToMany('OrderItem', (orderItem: OrderItem) => orderItem.order)
   order_items: Relation<OrderItem[]>;

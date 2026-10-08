@@ -24,18 +24,18 @@ ni implementan autenticación o hashing de contraseñas.
 - `unit_price` y `subtotal` son `numeric(12,2)`. El subtotal se genera en PostgreSQL
   como `quantity * unit_price`; el precio histórico se guarda en cada línea.
 
-## Dependencia de SPR1-03
+## Integración de SPR1-03
 
-En `develop`, `Table` y `Reservation` todavía son clases vacías sin `@Entity`.
-Por eso `table_id` y `reservation_id` se conservan como columnas UUID; todavía
-no verifican la existencia de mesas o reservas en PostgreSQL. No se pueden activar
-relaciones TypeORM contra esas clases sin impedir el arranque y las migraciones.
+SPR1-03 registra `RestaurantTable` y `Reservation` y agrega las FK de
+`orders.table_id` a `tables.id_table` y de `orders.reservation_id` a
+`reservations.id_reservation`. La restricción `UNIQUE` de la reserva se conserva;
+no se agrega otra restricción única para la misma columna.
 
-Al integrar el entregable de mesas y reservas, se deben añadir las relaciones a
-`Table.id_table` y `Reservation.id_reservation`, y una nueva migración con ambas
-FK. `table_id` ya tiene índice; la restricción única de `reservation_id` crea su
-índice. Antes de añadir las FK, validar que los UUID almacenados correspondan a
-registros existentes. Este PR no completa esa dependencia.
+Eliminar una mesa referenciada se rechaza. Eliminar una reserva deja
+`orders.reservation_id` en `NULL`, conservando la orden. Antes de aplicar esta
+migración sobre datos anteriores, las referencias de las órdenes deben
+corresponder a mesas/reservas existentes; PostgreSQL rechaza referencias
+inexistentes sin borrar esas órdenes.
 
 ## Validación HTTP
 
