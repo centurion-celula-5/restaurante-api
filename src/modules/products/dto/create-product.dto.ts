@@ -7,6 +7,7 @@ import {
   IsOptional,
   MaxLength,
 } from 'class-validator';
+import { MenuItemStatus } from '../enums/menu-item-status.enum.js';
 
 export class CreateProductDto {
   @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
@@ -29,10 +30,11 @@ export class CreateProductDto {
   id_category: number;
 
   @IsString()
+  @IsEnum(MenuItemStatus)
   @IsOptional()
-  status?: string;
+  status?: MenuItemStatus;
 
-  @IsNumber()
-  @IsOptional()
-  available_quantity?: number;
+  //@IsNumber()
+  //@IsOptional()
+  //available_quantity?: number;
 }
