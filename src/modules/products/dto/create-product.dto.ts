@@ -37,5 +37,6 @@ export class CreateProductDto {
 
   @IsNumber()
   @IsOptional()
+  @IsEnum(MenuItemAvailability)
   available_quantity?: MenuItemAvailability;
 }
