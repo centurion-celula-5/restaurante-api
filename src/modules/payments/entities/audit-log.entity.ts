@@ -2,29 +2,31 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 @Entity({ name: 'audit_logs' })
 export class AuditLog {
-  @PrimaryGeneratedColumn('uuid', { name: 'id_audit_log' })
-  id_audit_log: string;
+  @PrimaryGeneratedColumn('uuid', { name: 'id_audit' })
+  id_audit!: string;
 
-  @Column({ type: 'varchar', length: 120, name: 'entity_name' })
-  entity_name: string;
+  @Index('idx_audit_logs_user_id')
+  @Column({ type: 'uuid', name: 'user_id' })
+  user_id!: string;
 
-  @Column({ type: 'uuid', nullable: true, name: 'entity_id' })
-  entity_id: string | null;
+  @Column({ type: 'varchar', length: 30, name: 'action' })
+  action!: string;
 
-  @Column({ type: 'varchar', length: 50, name: 'action' })
-  action: string;
+  @Column({ type: 'varchar', length: 30, name: 'entity' })
+  entity!: string;
 
-  @Column({ type: 'text', nullable: true, name: 'details' })
-  details?: string | null;
+  @Column({ type: 'varchar', length: 64, name: 'entity_id' })
+  entity_id!: string;
 
-  @Column({ type: 'uuid', nullable: true, name: 'created_by_user_id' })
-  created_by_user_id?: string | null;
+  @Column({ type: 'jsonb', name: 'details' })
+  details!: Record<string, unknown>;
 
   @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
-  created_at: Date;
+  created_at!: Date;
 }
