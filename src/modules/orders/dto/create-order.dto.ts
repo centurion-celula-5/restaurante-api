@@ -8,6 +8,7 @@ import {
   IsOptional,
   IsUUID,
   ValidateNested,
+  ValidateIf,
 } from 'class-validator';
 import { OrderStatus } from '../enums/order-status.enum.js';
 import { CreateOrderItemDto } from './create-order-item.dto.js';
@@ -28,21 +29,21 @@ export class CreateOrderDto {
   })
   @IsOptional()
   @IsUUID()
-  reservation_id?: string;
+  reservation_id?: string | null;
 
   @ApiPropertyOptional({
     enum: OrderStatus,
     default: OrderStatus.PENDING,
     description:
-      'Status assigned to the order; the server defaults it to pending',
+      'Status assigned to the order; the server defaults it to PENDING',
   })
-  @IsOptional()
+  @ValidateIf((_object, value) => value !== undefined)
   @IsEnum(OrderStatus)
   status?: OrderStatus;
 
   @ApiProperty({
     type: [CreateOrderItemDto],
-    description: 'Products included in the order',
+    description: 'Menu items included in the order',
   })
   @IsArray()
   @ArrayMinSize(1)

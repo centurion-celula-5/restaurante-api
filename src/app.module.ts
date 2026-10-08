@@ -40,6 +40,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
           DB_PASSWORD: configService.get('DB_PASSWORD', { infer: true }),
           DB_NAME: configService.get('DB_NAME'),
         }),
+        autoLoadEntities: true,
       }),
     }),
 

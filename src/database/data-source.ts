@@ -19,6 +19,8 @@ const databaseDirectory = dirname(fileURLToPath(import.meta.url));
 export const AppDataSource = new DataSource({
   ...createTypeOrmOptions(enviroment),
 
+  entities: [join(databaseDirectory, '..', '**', '*.entity.{ts,js}')],
+
   migrations: [join(databaseDirectory, 'migrations', '*.{ts,js}')],
 });
 
