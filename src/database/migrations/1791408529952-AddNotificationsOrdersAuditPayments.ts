@@ -32,7 +32,9 @@ export class AddNotificationsOrdersAuditPayments1791408529952 implements Migrati
                 CONSTRAINT "PK_aeb74360cf6bc2b15d19ff1c15e" PRIMARY KEY ("id_notification")
             )
         `);
-    await queryRunner.query(`
+    // Orders may already be provided by SPR1-02 on an existing develop database.
+    if (!(await queryRunner.hasTable('orders'))) {
+      await queryRunner.query(`
             CREATE TYPE "public"."order_status" AS ENUM(
                 'pending',
                 'in_progress',
@@ -40,7 +42,7 @@ export class AddNotificationsOrdersAuditPayments1791408529952 implements Migrati
                 'cancelled'
             )
         `);
-    await queryRunner.query(`
+      await queryRunner.query(`
             CREATE TABLE "orders" (
                 "id_order" uuid NOT NULL DEFAULT uuid_generate_v4(),
                 "table_id" uuid NOT NULL,
@@ -52,6 +54,7 @@ export class AddNotificationsOrdersAuditPayments1791408529952 implements Migrati
                 CONSTRAINT "PK_cedeac4ffe8ca857395059cf954" PRIMARY KEY ("id_order")
             )
         `);
+    }
     await queryRunner.query(`
             CREATE TYPE "public"."payments_payment_method_enum" AS ENUM('CASH', 'CARD', 'TRANSFER')
         `);
@@ -77,12 +80,24 @@ export class AddNotificationsOrdersAuditPayments1791408529952 implements Migrati
     await queryRunner.query(`
             DROP TYPE "public"."payments_payment_method_enum"
         `);
-    await queryRunner.query(`
+    const [orderSchema] = await queryRunner.query(`
+        SELECT EXISTS (
+            SELECT 1 FROM pg_enum e
+            JOIN pg_type t ON t.oid = e.enumtypid
+            JOIN pg_namespace n ON n.oid = t.typnamespace
+            WHERE n.nspname = 'public' AND t.typname = 'order_status'
+                AND e.enumlabel = 'in_progress'
+        ) AS legacy
+    `);
+    // Do not remove the orders schema owned by SPR1-02.
+    if (orderSchema.legacy) {
+      await queryRunner.query(`
             DROP TABLE "orders"
         `);
-    await queryRunner.query(`
+      await queryRunner.query(`
             DROP TYPE "public"."order_status"
         `);
+    }
     await queryRunner.query(`
             DROP TABLE "notifications"
         `);

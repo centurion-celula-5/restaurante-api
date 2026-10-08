@@ -4,6 +4,7 @@ export class AlignNotificationsPaymentsAudit1791421126527 implements MigrationIn
   name = 'AlignNotificationsPaymentsAudit1791421126527';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
+    await this.requireEmptyTables(queryRunner);
     await queryRunner.query(`
             ALTER TABLE "audit_logs" DROP CONSTRAINT "PK_f8ba9ac02a1150760efbd546dc5"
         `);
@@ -127,6 +128,7 @@ export class AlignNotificationsPaymentsAudit1791421126527 implements MigrationIn
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    await this.requireEmptyTables(queryRunner);
     await queryRunner.query(`
             DROP INDEX "public"."idx_payments_order_id"
         `);
@@ -249,5 +251,20 @@ export class AlignNotificationsPaymentsAudit1791421126527 implements MigrationIn
             ALTER TABLE "audit_logs"
             ADD CONSTRAINT "PK_f8ba9ac02a1150760efbd546dc5" PRIMARY KEY ("id_audit_log")
         `);
+  }
+  private async requireEmptyTables(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(
+      'LOCK TABLE "audit_logs", "notifications", "payments" IN ACCESS EXCLUSIVE MODE',
+    );
+    const [result] = await queryRunner.query(`
+      SELECT EXISTS (SELECT 1 FROM "audit_logs")
+        OR EXISTS (SELECT 1 FROM "notifications")
+        OR EXISTS (SELECT 1 FROM "payments") AS has_data
+    `);
+    if (result.has_data) {
+      throw new Error(
+        'AlignNotificationsPaymentsAudit requiere audit_logs, notifications y payments vacías. Si tienen datos, se necesita una migración de datos antes de cambiar sus columnas.',
+      );
+    }
   }
 }

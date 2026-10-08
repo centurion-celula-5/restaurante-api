@@ -1,7 +1,14 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsEnum, IsNotEmpty, IsNumber, IsUUID, Min } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsUUID,
+  Max,
+  Min,
+} from 'class-validator';
 import { PaymentMethod } from '../enums/payment-method.enum.js';
 
 export class CreatePaymentDto {
@@ -21,6 +28,7 @@ export class CreatePaymentDto {
   @IsNotEmpty()
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
+  @Max(9_999_999_999.99)
   amount: number;
 
   @ApiProperty({
@@ -33,4 +41,6 @@ export class CreatePaymentDto {
   payment_method: PaymentMethod;
 }
 
-export class UpdatePaymentDto extends PartialType(CreatePaymentDto) {}
+export class UpdatePaymentDto extends PartialType(CreatePaymentDto, {
+  skipNullProperties: false,
+}) {}

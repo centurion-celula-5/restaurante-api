@@ -4,10 +4,10 @@ import { Transform } from 'class-transformer';
 import {
   IsEnum,
   IsNotEmpty,
-  IsOptional,
   IsString,
   IsUUID,
   MaxLength,
+  ValidateIf,
 } from 'class-validator';
 import { NotificationType } from '../enums/notification-type.enum.js';
 
@@ -17,7 +17,7 @@ export class CreateNotificationDto {
     enum: NotificationType,
     example: NotificationType.SYSTEM,
   })
-  @IsOptional()
+  @ValidateIf((_object, value) => value !== undefined)
   @IsEnum(NotificationType)
   type?: NotificationType;
 
@@ -49,4 +49,6 @@ export class CreateNotificationDto {
   message: string;
 }
 
-export class UpdateNotificationDto extends PartialType(CreateNotificationDto) {}
+export class UpdateNotificationDto extends PartialType(CreateNotificationDto, {
+  skipNullProperties: false,
+}) {}
