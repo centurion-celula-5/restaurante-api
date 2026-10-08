@@ -6,12 +6,22 @@ import {
   Patch,
   Param,
   Delete,
+  ParseUUIDPipe,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { TablesService } from './tables.service.js';
 import { CreateTableDto } from './dto/create-table.dto.js';
 import { UpdateTableDto } from './dto/update-table.dto.js';
 
 @Controller('tables')
+@UsePipes(
+  new ValidationPipe({
+    transform: true,
+    whitelist: true,
+    forbidNonWhitelisted: true,
+  }),
+)
 export class TablesController {
   constructor(private readonly tablesService: TablesService) {}
 
@@ -26,17 +36,20 @@ export class TablesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tablesService.findOne(+id);
+  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.tablesService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTableDto: UpdateTableDto) {
-    return this.tablesService.update(+id, updateTableDto);
+  update(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() updateTableDto: UpdateTableDto,
+  ) {
+    return this.tablesService.update(id, updateTableDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.tablesService.remove(+id);
+  remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.tablesService.remove(id);
   }
 }

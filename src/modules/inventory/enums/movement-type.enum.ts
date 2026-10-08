@@ -1,6 +1,6 @@
 export enum MovementType {
   ENTRY = 'ENTRY',
   CONSUME = 'CONSUME',
-  RETURN = 'RETURM',
+  RETURN = 'RETURN',
   ADJUSTMENT = 'ADJUSTMENT',
 }

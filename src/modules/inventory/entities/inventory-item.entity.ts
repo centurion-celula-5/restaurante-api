@@ -2,9 +2,9 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
+  UpdateDateColumn,
 } from 'typeorm';
 import { UnitBase } from '../enums/unit-base.enum.js';
 
@@ -37,8 +37,8 @@ export class InventoryItems {
   })
   current_stock: number;
 
-  @Column({ name: 'mininum_stock', type: 'numeric', precision: 12, scale: 3 })
-  mininum_stock: number;
+  @Column({ name: 'minimum_stock', type: 'numeric', precision: 12, scale: 3 })
+  minimum_stock: number;
 
   @Column({ name: 'is_active', type: 'boolean', default: true })
   is_active: boolean;
@@ -46,6 +46,8 @@ export class InventoryItems {
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   created_at: Date;
 
-  @CreateDateColumn({ name: 'updated_at', type: 'timestamptz' })
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
   updated_at: Date;
 }
+
+export { InventoryItems as InventoryItem };

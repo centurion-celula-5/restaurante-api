@@ -17,6 +17,7 @@ import { OrdersModule } from './modules/orders/orders.module.js';
 import { PaymentsModule } from './modules/payments/payments.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { CategoriesModule } from './modules/categories/categories.module.js';
+import { NotificationsModule } from './modules/notifications/notifications.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -40,6 +41,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
           DB_PASSWORD: configService.get('DB_PASSWORD', { infer: true }),
           DB_NAME: configService.get('DB_NAME'),
         }),
+        autoLoadEntities: true,
       }),
     }),
 
@@ -52,6 +54,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     InventoryModule,
     OrdersModule,
     PaymentsModule,
+    NotificationsModule,
     AuthModule,
     CategoriesModule,
   ],

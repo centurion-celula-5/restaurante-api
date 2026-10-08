@@ -12,15 +12,15 @@ export class TablesService {
     return `This action returns all tables`;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} table`;
   }
 
-  update(id: number, updateTableDto: UpdateTableDto) {
+  update(id: string, updateTableDto: UpdateTableDto) {
     return `This action updates a #${id} table`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} table`;
   }
 }

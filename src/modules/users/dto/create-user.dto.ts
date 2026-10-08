@@ -6,6 +6,7 @@ import {
   MinLength,
   MaxLength,
   IsDateString,
+  ValidateIf,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
@@ -17,8 +18,9 @@ export class CreateUserDto {
     description: 'User identification number',
     maxLength: 50,
   })
-  @Transform(({ value }) => value?.trim())
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @IsString()
+  @MinLength(1)
   @MaxLength(50)
   identification_number: string;
 
@@ -27,8 +29,9 @@ export class CreateUserDto {
     description: 'Full name of the user',
     maxLength: 150,
   })
-  @Transform(({ value }) => value?.trim())
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @IsString()
+  @MinLength(1)
   @MaxLength(150)
   name_user: string;
 
@@ -36,14 +39,16 @@ export class CreateUserDto {
     example: 'gabriel@riwi.io',
     description: 'Unique email address, used to log in',
   })
-  @Transform(({ value }) => value?.trim().toLowerCase())
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.trim().toLowerCase() : value,
+  )
   @IsEmail()
   @MaxLength(150)
   email_user: string;
 
   @ApiProperty({
     example: 'securePassword123',
-    description: 'Plain text password; it gets hashed before being stored',
+    description: 'User password',
     minLength: 8,
   })
   @IsString()
@@ -56,24 +61,25 @@ export class CreateUserDto {
   })
   @IsOptional()
   @IsDateString()
-  birthday?: string;
+  birthday?: string | null;
 
   @ApiPropertyOptional({
     example: '3001234567',
     description: 'Contact phone number',
   })
-  @Transform(({ value }) => value?.trim())
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @IsOptional()
   @IsString()
   @MaxLength(50)
-  phone_user?: string;
+  phone_user?: string | null;
 
   @ApiPropertyOptional({
     enum: UserRole,
-    example: UserRole.WAITER,
+    example: UserRole.EMPLOYEE,
+    default: UserRole.EMPLOYEE,
     description: 'Role assigned to the user within the system',
   })
-  @IsOptional()
+  @ValidateIf((_object, value) => value !== undefined)
   @IsEnum(UserRole)
   user_role?: UserRole;
 }
