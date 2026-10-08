@@ -6,8 +6,13 @@ import { NotificationType } from '../notifications/enums/notification-type.enum.
 
 describe('payments and notifications persistence model', () => {
   it('should expose payment and notification enums', () => {
-    expect(PaymentMethod.CARD).toBe('CARD');
-    expect(NotificationType.EMAIL).toBe('EMAIL');
+    expect(Object.values(PaymentMethod)).toEqual(['CASH', 'CARD', 'TRANSFER']);
+    expect(Object.values(NotificationType)).toEqual([
+      'RESERVATION',
+      'ORDER',
+      'INVENTORY',
+      'SYSTEM',
+    ]);
   });
 
   it('should reject invalid payment payloads', () => {
@@ -24,7 +29,8 @@ describe('payments and notifications persistence model', () => {
   it('should reject invalid notification payloads', () => {
     const dto = new CreateNotificationDto();
     dto.type = 'UNKNOWN' as NotificationType;
-    dto.recipient = '';
+    dto.recipient_user_id = '';
+    dto.title = '';
     dto.message = '';
 
     const errors = validateSync(dto);
