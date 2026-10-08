@@ -1,25 +1,18 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsUUID,
-  MaxLength,
-  Min,
-} from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
+import { IsEnum, IsNotEmpty, IsNumber, IsUUID, Min } from 'class-validator';
 import { PaymentMethod } from '../enums/payment-method.enum.js';
 
 export class CreatePaymentDto {
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'Order identifier associated with the payment',
     example: '3d0a1c42-cc7b-4d44-8f09-1a0a5ce8f7a4',
   })
-  @IsOptional()
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
+  @IsNotEmpty()
   @IsUUID()
-  order_id?: string;
+  order_id: string;
 
   @ApiProperty({
     description: 'Amount paid for the transaction',
@@ -38,24 +31,6 @@ export class CreatePaymentDto {
   @IsNotEmpty()
   @IsEnum(PaymentMethod)
   payment_method: PaymentMethod;
-
-  @ApiPropertyOptional({
-    description: 'Optional transaction or authorization reference code',
-    example: 'PAY-1023-REF',
-  })
-  @IsOptional()
-  @IsString()
-  @MaxLength(120)
-  transaction_reference?: string;
-
-  @ApiPropertyOptional({
-    description: 'Current payment status',
-    example: 'PAID',
-  })
-  @IsOptional()
-  @IsString()
-  @MaxLength(50)
-  status?: string;
 }
 
 export class UpdatePaymentDto extends PartialType(CreatePaymentDto) {}
