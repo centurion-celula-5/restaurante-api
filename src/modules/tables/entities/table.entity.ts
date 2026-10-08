@@ -1,16 +1,8 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Check, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { TableStatus, TableZone } from '../enums/table-zone.enum.js';
-import { timeStamp } from 'node:console';
-import { Timestamp } from 'typeorm/driver/mongodb/bson.typings.js';
-import { UpdateAuthDto } from '../../auth/dto/update-auth.dto.js';
 
-@Entity({ name: 'restaurant_tables' })
+@Entity({ name: 'tables' })
+@Check('CHK_tables_capacity_positive', '"capacity" > 0')
 export class RestaurantTable {
   @PrimaryGeneratedColumn('uuid', { name: 'id_table' })
   id_table: string;
@@ -33,14 +25,8 @@ export class RestaurantTable {
     name: 'status',
     type: 'enum',
     enum: TableStatus,
-    enumName: 'TableStatus',
+    enumName: 'table_status',
     default: TableStatus.AVAILABLE,
   })
   status: TableStatus;
-
-  @CreateDateColumn({ name: 'Created_at', type: 'timestamptz' })
-  created_at: Date;
-
-  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
-  updated_at: Date;
 }

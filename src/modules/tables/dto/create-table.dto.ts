@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsEnum,
   IsInt,
@@ -7,9 +7,9 @@ import {
   MaxLength,
   Min,
   Max,
+  ValidateIf,
 } from 'class-validator';
-import { number, string } from 'zod';
-import { TableZone } from '../enums/table-zone.enum.js';
+import { TableZone, TableStatus } from '../enums/table-zone.enum.js';
 import { Transform } from 'class-transformer';
 
 export class CreateTableDto {
@@ -20,14 +20,19 @@ export class CreateTableDto {
   @MaxLength(50)
   tableNumber: string;
 
-  @ApiProperty({ example: 4, minimum: 1, maximum: 32727 })
+  @ApiProperty({ example: 4, minimum: 1, maximum: 32767 })
   @IsInt()
   @IsNotEmpty()
   @Min(1)
-  @Max(32727)
+  @Max(32767)
   capacity: number;
 
   @ApiProperty({ enum: TableZone, example: TableZone.PLANTA1 })
   @IsEnum(TableZone, { message: ' zone debe ser PLANTA1 o PLANTA2' })
   zone: TableZone;
+
+  @ApiPropertyOptional({ enum: TableStatus, default: TableStatus.AVAILABLE })
+  @ValidateIf((_object, value) => value !== undefined)
+  @IsEnum(TableStatus)
+  status?: TableStatus;
 }

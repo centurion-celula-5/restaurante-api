@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity({ name: 'customers' })
@@ -13,16 +14,16 @@ export class Customer {
   @Column({ name: 'name_customer', type: 'varchar', length: 150 })
   name_customer: string;
 
-  @Column({ name: 'phone_customer', type: 'varchar', length: 38 })
+  @Column({ name: 'phone_customer', type: 'varchar', length: 30 })
   phone_customer: string;
 
   @Column({ name: 'email_customer', type: 'varchar', length: 150 })
   email_customer: string;
 
-  @Column({ name: 'created_ad', type: 'timestamptz' })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   created_at: Date;
 
-  @Column({ name: 'updated_at', type: 'timestamptz' })
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
   updated_at: Date;
 }
 
