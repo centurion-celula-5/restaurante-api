@@ -12,15 +12,15 @@ export class InventoryService {
     return `This action returns all inventory`;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} inventory`;
   }
 
-  update(id: number, updateInventoryDto: UpdateInventoryDto) {
+  update(id: string, updateInventoryDto: UpdateInventoryDto) {
     return `This action updates a #${id} inventory`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} inventory`;
   }
 }
