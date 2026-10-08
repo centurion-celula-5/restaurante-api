@@ -17,7 +17,11 @@ async function bootstrap() {
     instrument: ObserveInstrument,
   });
 
-  app.useGlobalPipes(new ValidationPipe({}));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    }),
+  );
   swaggerConfiguration(app);
 
   const configService =
