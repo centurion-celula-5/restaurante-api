@@ -18,9 +18,7 @@ export class HealthService {
    *
    * @param {HealthDao} healthDao DAO de Health.
    */
-  public constructor(
-    private readonly healthDao: HealthDao,
-  ) {}
+  public constructor(private readonly healthDao: HealthDao) {}
 
   /**
    * Obtiene el estado actual de la aplicación.
