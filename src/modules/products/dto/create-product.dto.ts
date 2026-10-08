@@ -8,6 +8,7 @@ import {
   MaxLength,
 } from 'class-validator';
 import { MenuItemStatus } from '../enums/menu-item-status.enum.js';
+import { MenuItemAvailability } from '../enums/menu-item-availability.enum.js';
 
 export class CreateProductDto {
   @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
@@ -34,7 +35,7 @@ export class CreateProductDto {
   @IsOptional()
   status?: MenuItemStatus;
 
-  //@IsNumber()
-  //@IsOptional()
-  //available_quantity?: number;
+  @IsNumber()
+  @IsOptional()
+  available_quantity?: MenuItemAvailability;
 }
