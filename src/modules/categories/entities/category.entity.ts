@@ -32,6 +32,7 @@ export class Category {
   })
   status: CategoryStatus;
 
+  // LADO 1: Categoría (Tiene MUCHOS productos del menú) -> PLURAL
   @OneToMany(() => MenuItem, (menuItem) => menuItem.category)
   menuItems: Relation<MenuItem[]>;
 }
