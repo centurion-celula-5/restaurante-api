@@ -3,3 +3,5 @@ export enum UnitBase {
   ML = 'ML',
   UN = 'UN',
 }
+
+export { UnitBase as InventoryUnit };
