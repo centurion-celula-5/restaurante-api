@@ -1,4 +1,13 @@
-import { Column, Check, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Check,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import type { Relation } from 'typeorm';
+import { Order } from '../../orders/entities/order.entity.js';
+import { Reservation } from '../../reservations/entities/reservation.entity.js';
 import { TableStatus, TableZone } from '../enums/table-zone.enum.js';
 
 @Entity({ name: 'tables' })
@@ -29,4 +38,12 @@ export class RestaurantTable {
     default: TableStatus.AVAILABLE,
   })
   status: TableStatus;
+
+  // LADO 1: Mesa (Tiene MUCHAS reservas) -> PLURAL
+  @OneToMany(() => Reservation, (reservation) => reservation.table)
+  reservations?: Relation<Reservation[]>;
+
+  // LADO 1: Mesa (Tiene MUCHAS órdenes) -> PLURAL
+  @OneToMany(() => Order, (order) => order.table)
+  orders?: Relation<Order[]>;
 }
