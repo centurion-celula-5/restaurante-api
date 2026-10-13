@@ -17,6 +17,7 @@ import { OrdersModule } from './modules/orders/orders.module.js';
 import { PaymentsModule } from './modules/payments/payments.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { CategoriesModule } from './modules/categories/categories.module.js';
+import { NotificationsModule } from './modules/notifications/notifications.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -25,24 +26,25 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
-      validationSchema: envSchema
+      validationSchema: envSchema,
     }),
-    
+
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService<EnvVariables, true>) => ({
         ...createTypeOrmOptions({
-          NODE_ENV: configService.get('NODE_ENV',{infer: true}),
-          DB_HOST: configService.get('DB_HOST',{infer: true}),
-          DB_PORT: configService.get('DB_PORT',{infer: true}),
-          DB_USER: configService.get('DB_USER',{infer: true}),
-          DB_PASSWORD: configService.get('DB_PASSWORD',{infer: true}),
-          DB_NAME: configService.get('DB_NAME')
-        })
-      })
+          NODE_ENV: configService.get('NODE_ENV', { infer: true }),
+          DB_HOST: configService.get('DB_HOST', { infer: true }),
+          DB_PORT: configService.get('DB_PORT', { infer: true }),
+          DB_USER: configService.get('DB_USER', { infer: true }),
+          DB_PASSWORD: configService.get('DB_PASSWORD', { infer: true }),
+          DB_NAME: configService.get('DB_NAME'),
+        }),
+        autoLoadEntities: true,
+      }),
     }),
-    
+
     HealthModule,
     TablesModule,
     UsersModule,
@@ -52,6 +54,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     InventoryModule,
     OrdersModule,
     PaymentsModule,
+    NotificationsModule,
     AuthModule,
     CategoriesModule,
   ],

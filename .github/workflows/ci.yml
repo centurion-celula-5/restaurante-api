@@ -1,0 +1,114 @@
+name: CI
+
+# Runs on every pull request to develop/main and after every merge to develop.
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [develop]
+
+# A new push to the same branch cancels the run that is still in progress.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # Use the same Node version the team uses locally (node -v).
+  # It must match the npm version that generated package-lock.json.
+  NODE_VERSION: 24
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # 1. Code quality: no database needed.
+  # ---------------------------------------------------------------------------
+  quality:
+    name: Lint, format, build and tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Build
+        run: npm run build
+
+      - name: Unit tests with coverage
+        run: npm run test:cov
+
+  # ---------------------------------------------------------------------------
+  # 2. Database: only runs if the quality job passed.
+  # ---------------------------------------------------------------------------
+  database:
+    name: Migrations
+    runs-on: ubuntu-latest
+    needs: quality
+
+    # Throwaway PostgreSQL, only for this run.
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: app_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d app_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    # ADJUST: use the same variable names as your .env.example.
+    # Every variable your app validates on startup must be here.
+    env:
+      NODE_ENV: test
+      HOST: localhost
+      PORT: 3020
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: app_test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run migrations on an empty database
+        run: npm run migration:run
+
+      # Fails if an entity was changed without its migration.
+      - name: Check entities and migrations are in sync
+        run: npm run migration:generate -- src/database/migrations/SchemaCheck --check
+
+      # OPTIONAL: uncomment when the project has working e2e tests.
+      # - name: E2E tests
+      #   run: npm run test:e2e

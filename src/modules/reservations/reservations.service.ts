@@ -12,15 +12,15 @@ export class ReservationsService {
     return `This action returns all reservations`;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} reservation`;
   }
 
-  update(id: number, updateReservationDto: UpdateReservationDto) {
+  update(id: string, updateReservationDto: UpdateReservationDto) {
     return `This action updates a #${id} reservation`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} reservation`;
   }
 }

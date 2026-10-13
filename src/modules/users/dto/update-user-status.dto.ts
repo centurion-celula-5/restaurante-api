@@ -8,7 +8,7 @@ export class UpdateUserStatusDto {
     description: 'true = active user, false = deactivated user',
   })
   @Transform(({ value }) =>
-    typeof value === 'string' ? value === 'true' : value,
+    value === 'true' ? true : value === 'false' ? false : value,
   )
   @IsBoolean()
   is_active: boolean;
