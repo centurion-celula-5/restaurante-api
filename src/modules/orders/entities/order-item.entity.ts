@@ -5,11 +5,13 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import type { Relation } from 'typeorm';
 import { MenuItem } from '../../products/entities/menu-item.entity.js';
+import { InventoryMovement } from '../../inventory/entities/inventory-movement.entity.js';
 import { OrderItemStatus } from '../enums/order-item-status.enum.js';
 import { Order } from './order.entity.js';
 
@@ -59,7 +61,8 @@ export class OrderItem {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
   updated_at: Date;
 
-  @ManyToOne(() => Order, (order) => order.order_items, {
+  // LADO N: Detalle de orden (Pertenece a UNA orden) -> SINGULAR
+  @ManyToOne(() => Order, (order) => order.orderItems, {
     nullable: false,
     onDelete: 'RESTRICT',
   })
@@ -70,11 +73,19 @@ export class OrderItem {
   })
   order: Relation<Order>;
 
-  @ManyToOne(() => MenuItem, { nullable: false, onDelete: 'RESTRICT' })
+  // LADO N: Detalle de orden (Referencia UN producto del menú) -> SINGULAR
+  @ManyToOne(() => MenuItem, (menuItem) => menuItem.orderItems, {
+    nullable: false,
+    onDelete: 'RESTRICT',
+  })
   @JoinColumn({
     name: 'menu_item_id',
     referencedColumnName: 'id_menu_item',
     foreignKeyConstraintName: 'fk_order_items_menu_items',
   })
-  menu_item: Relation<MenuItem>;
+  menuItem: Relation<MenuItem>;
+
+  // LADO 1: Detalle de orden (Tiene MUCHOS movimientos) -> PLURAL
+  @OneToMany(() => InventoryMovement, (movement) => movement.orderItem)
+  inventoryMovements?: Relation<InventoryMovement[]>;
 }

@@ -19,7 +19,11 @@ export class AuditLog {
   @Column({ type: 'uuid', name: 'user_id' })
   user_id!: string;
 
-  @ManyToOne(() => User, { nullable: false, onDelete: 'RESTRICT' })
+  // LADO N: Registro de auditoría (Pertenece a UN usuario) -> SINGULAR
+  @ManyToOne(() => User, (user) => user.auditLogs, {
+    nullable: false,
+    onDelete: 'RESTRICT',
+  })
   @JoinColumn({
     name: 'user_id',
     referencedColumnName: 'id_user',
