@@ -4,10 +4,13 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import type { Relation } from 'typeorm';
 import { Category } from '../../categories/entities/category.entity.js';
+import { MenuItemIngredient } from '../../inventory/entities/menu-item-ingredient.entity.js';
+import { OrderItem } from '../../orders/entities/order-item.entity.js';
 import { MenuItemState } from '../enums/menu-item-state.enum.js';
 import { MenuItemAvailability } from '../enums/menu-item-availability.enum.js';
 
@@ -29,6 +32,7 @@ export class MenuItem {
   @Column({ name: 'category_id', type: 'integer', nullable: false })
   category_id: number;
 
+  // LADO N: Producto del menú (Pertenece a UNA categoría) -> SINGULAR
   @ManyToOne(() => Category, (category) => category.menuItems, {
     nullable: false,
     onDelete: 'RESTRICT',
@@ -57,4 +61,12 @@ export class MenuItem {
     default: MenuItemAvailability.AVAILABLE,
   })
   availability: MenuItemAvailability;
+
+  // LADO 1: Producto del menú (Aparece en MUCHOS detalles de orden) -> PLURAL
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.menuItem)
+  orderItems?: Relation<OrderItem[]>;
+
+  // LADO 1: Producto del menú (Tiene MUCHOS ingredientes) -> PLURAL
+  @OneToMany(() => MenuItemIngredient, (ingredient) => ingredient.menuItem)
+  menuItemIngredients?: Relation<MenuItemIngredient[]>;
 }
