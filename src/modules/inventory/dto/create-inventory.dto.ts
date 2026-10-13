@@ -1,13 +1,16 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { Transform, Type } from 'class-transformer';
+import { Transform } from 'class-transformer';
 import {
   IsEnum,
+  IsBoolean,
   IsNotEmpty,
   IsNumber,
   IsString,
   MaxLength,
   Min,
+  Max,
+  ValidateIf,
 } from 'class-validator';
 import { UnitBase } from '../enums/unit-base.enum.js';
 
@@ -30,12 +33,24 @@ export class CreateInventoryDto {
   @IsEnum(UnitBase)
   unitBase: UnitBase;
 
-  @ApiProperty({ example: 2000, minimum: 0 })
-  @Type(() => Number)
+  @ApiPropertyOptional({ example: 2000, minimum: 0, default: 0 })
+  @ValidateIf((_object, value) => value !== undefined)
   @IsNumber(
     { maxDecimalPlaces: 3 },
-    { message: 'minimo stock debe ser un número con maximo 3 decimales' },
+    { message: 'currentStock debe ser un número con máximo 3 decimales' },
   )
   @Min(0)
-  currentStop: number;
+  @Max(999_999_999.999)
+  currentStock?: number;
+
+  @ApiProperty({ example: 500, minimum: 0 })
+  @IsNumber({ maxDecimalPlaces: 3 })
+  @Min(0)
+  @Max(999_999_999.999)
+  minimumStock: number;
+
+  @ApiPropertyOptional({ default: true })
+  @ValidateIf((_object, value) => value !== undefined)
+  @IsBoolean()
+  isActive?: boolean;
 }
