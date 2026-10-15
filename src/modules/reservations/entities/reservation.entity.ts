@@ -7,12 +7,14 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import type { Relation } from 'typeorm';
 import { Customer } from '../../customers/entities/customer.entity.js';
 import { RestaurantTable } from '../../tables/entities/table.entity.js';
+import { Order } from '../../orders/entities/order.entity.js';
 import { ReservationStatus } from './enum/reservation-estatus.enum.js';
 
 @Entity({ name: 'reservations' })
@@ -65,7 +67,11 @@ export class Reservation {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
   updated_at: Date;
 
-  @ManyToOne(() => Customer, { nullable: false, onDelete: 'RESTRICT' })
+  // LADO N: Reserva (Pertenece a UN cliente) -> SINGULAR
+  @ManyToOne(() => Customer, (customer) => customer.reservations, {
+    nullable: false,
+    onDelete: 'RESTRICT',
+  })
   @JoinColumn({
     name: 'customer_id',
     referencedColumnName: 'id_customer',
@@ -73,11 +79,19 @@ export class Reservation {
   })
   customer?: Relation<Customer>;
 
-  @ManyToOne(() => RestaurantTable, { nullable: false, onDelete: 'RESTRICT' })
+  // LADO N: Reserva (Pertenece a UNA mesa) -> SINGULAR
+  @ManyToOne(() => RestaurantTable, (table) => table.reservations, {
+    nullable: false,
+    onDelete: 'RESTRICT',
+  })
   @JoinColumn({
     name: 'table_id',
     referencedColumnName: 'id_table',
     foreignKeyConstraintName: 'fk_reservations_tables',
   })
   table?: Relation<RestaurantTable>;
+
+  // LADO 1: Reserva (Puede originar UNA orden o ninguna) -> SINGULAR
+  @OneToOne(() => Order, (order) => order.reservation)
+  order?: Relation<Order> | null;
 }

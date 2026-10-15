@@ -20,13 +20,17 @@ export class Notification {
   @Column({ type: 'uuid', name: 'recipient_user_id' })
   recipient_user_id!: string;
 
-  @ManyToOne(() => User, { nullable: false, onDelete: 'RESTRICT' })
+  // LADO N: Notificación (Tiene UN usuario destinatario) -> SINGULAR
+  @ManyToOne(() => User, (user) => user.notifications, {
+    nullable: false,
+    onDelete: 'RESTRICT',
+  })
   @JoinColumn({
     name: 'recipient_user_id',
     referencedColumnName: 'id_user',
     foreignKeyConstraintName: 'fk_notifications_users',
   })
-  recipient_user?: Relation<User>;
+  recipientUser?: Relation<User>;
 
   @Column({ type: 'varchar', length: 150, name: 'title' })
   title!: string;

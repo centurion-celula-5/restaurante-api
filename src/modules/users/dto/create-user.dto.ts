@@ -1,13 +1,14 @@
 import {
-  IsString,
-  IsEmail,
-  IsOptional,
-  IsEnum,
-  MinLength,
-  MaxLength,
-  IsDateString,
-  ValidateIf,
-} from 'class-validator';
+    IsString,
+    IsEmail,
+    IsOptional,
+    IsEnum,
+    MinLength,
+    MaxLength,
+    IsDateString,
+    Matches,
+    ValidateIf,
+  } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserRole } from '../enums/user-role.enum.js';
@@ -60,7 +61,10 @@ export class CreateUserDto {
     description: 'Date of birth in ISO format (YYYY-MM-DD)',
   })
   @IsOptional()
-  @IsDateString()
+  @Matches(/^\d{4}-\d{2}-\d{2}$/, {
+    message: 'birthday must be a date in YYYY-MM-DD format',
+  })
+  @IsDateString({ strict: true })
   birthday?: string | null;
 
   @ApiPropertyOptional({
