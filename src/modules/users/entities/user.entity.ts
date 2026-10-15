@@ -62,7 +62,7 @@ export class User {
   @OneToMany(() => Order, (order) => order.createdByUser)
   orders?: Relation<Order[]>;
 
-  // LADO 1: Usuario (Recibe MUCHAS notificaciones) -> PLURAL
+  // LADO 1: Usuario (Recibe MUCHAS notificaciones) -> PLURAL (estudiar call back)
   @OneToMany(() => Notification, (notification) => notification.recipientUser)
   notifications?: Relation<Notification[]>;
 
