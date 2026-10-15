@@ -56,27 +56,39 @@ export class InventoryMovement {
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   created_at: Date;
 
-  @ManyToOne(() => InventoryItems, { nullable: false, onDelete: 'RESTRICT' })
+  // LADO N: Movimiento (Pertenece a UN insumo) -> SINGULAR
+  @ManyToOne(() => InventoryItems, (item) => item.inventoryMovements, {
+    nullable: false,
+    onDelete: 'RESTRICT',
+  })
   @JoinColumn({
     name: 'inventory_item_id',
     referencedColumnName: 'id_inventory_item',
     foreignKeyConstraintName: 'fk_inventory_movements_items',
   })
-  inventory_item?: Relation<InventoryItems>;
+  inventoryItem?: Relation<InventoryItems>;
 
-  @ManyToOne(() => OrderItem, { nullable: true, onDelete: 'RESTRICT' })
+  // LADO N: Movimiento (Puede pertenecer a UN detalle de orden) -> SINGULAR
+  @ManyToOne(() => OrderItem, (orderItem) => orderItem.inventoryMovements, {
+    nullable: true,
+    onDelete: 'RESTRICT',
+  })
   @JoinColumn({
     name: 'order_item_id',
     referencedColumnName: 'id_order_item',
     foreignKeyConstraintName: 'fk_inventory_movements_order_items',
   })
-  order_item?: Relation<OrderItem> | null;
+  orderItem?: Relation<OrderItem> | null;
 
-  @ManyToOne(() => User, { nullable: false, onDelete: 'RESTRICT' })
+  // LADO N: Movimiento (Fue realizado por UN usuario) -> SINGULAR
+  @ManyToOne(() => User, (user) => user.inventoryMovements, {
+    nullable: false,
+    onDelete: 'RESTRICT',
+  })
   @JoinColumn({
     name: 'performed_by_user_id',
     referencedColumnName: 'id_user',
     foreignKeyConstraintName: 'fk_inventory_movements_users',
   })
-  performed_by_user?: Relation<User>;
+  performedByUser?: Relation<User>;
 }

@@ -2,10 +2,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
+import type { Relation } from 'typeorm';
+import { InventoryMovement } from './inventory-movement.entity.js';
+import { MenuItemIngredient } from './menu-item-ingredient.entity.js';
 import { UnitBase } from '../enums/unit-base.enum.js';
 
 @Entity({ name: 'inventory_items' })
@@ -48,6 +52,14 @@ export class InventoryItems {
 
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
   updated_at: Date;
+
+  // LADO 1: Insumo (Tiene MUCHOS movimientos) -> PLURAL
+  @OneToMany(() => InventoryMovement, (movement) => movement.inventoryItem)
+  inventoryMovements?: Relation<InventoryMovement[]>;
+
+  // LADO 1: Insumo (Aparece en MUCHOS ingredientes del menú) -> PLURAL
+  @OneToMany(() => MenuItemIngredient, (ingredient) => ingredient.inventoryItem)
+  menuItemIngredients?: Relation<MenuItemIngredient[]>;
 }
 
 export { InventoryItems as InventoryItem };

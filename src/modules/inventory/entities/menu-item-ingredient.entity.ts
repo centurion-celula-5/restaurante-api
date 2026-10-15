@@ -27,19 +27,27 @@ export class MenuItemIngredient {
   })
   quantity_required: number;
 
-  @ManyToOne(() => MenuItem, { nullable: false, onDelete: 'RESTRICT' })
+  // LADO N: Ingrediente (Pertenece a UN producto del menú) -> SINGULAR
+  @ManyToOne(() => MenuItem, (menuItem) => menuItem.menuItemIngredients, {
+    nullable: false,
+    onDelete: 'RESTRICT',
+  })
   @JoinColumn({
     name: 'menu_item_id',
     referencedColumnName: 'id_menu_item',
     foreignKeyConstraintName: 'fk_menu_item_ingredients_menu_items',
   })
-  menu_item?: Relation<MenuItem>;
+  menuItem?: Relation<MenuItem>;
 
-  @ManyToOne(() => InventoryItems, { nullable: false, onDelete: 'RESTRICT' })
+  // LADO N: Ingrediente (Referencia UN insumo) -> SINGULAR
+  @ManyToOne(() => InventoryItems, (item) => item.menuItemIngredients, {
+    nullable: false,
+    onDelete: 'RESTRICT',
+  })
   @JoinColumn({
     name: 'inventory_item_id',
     referencedColumnName: 'id_inventory_item',
     foreignKeyConstraintName: 'fk_menu_item_ingredients_inventory_items',
   })
-  inventory_item?: Relation<InventoryItems>;
+  inventoryItem?: Relation<InventoryItems>;
 }
