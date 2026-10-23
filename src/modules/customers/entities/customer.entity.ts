@@ -2,9 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import type { Relation } from 'typeorm';
+import { Reservation } from '../../reservations/entities/reservation.entity.js';
 
 @Entity({ name: 'customers' })
 export class Customer {
@@ -25,6 +28,10 @@ export class Customer {
 
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
   updated_at: Date;
+
+  // LADO 1: Cliente (Tiene MUCHAS reservas) -> PLURAL
+  @OneToMany(() => Reservation, (reservation) => reservation.customer)
+  reservations?: Relation<Reservation[]>;
 }
 
 /*Guia para la elaboración de la entidad de cliente (Customer)

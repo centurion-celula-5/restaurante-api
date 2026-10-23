@@ -20,7 +20,11 @@ export class Payment {
   @Column({ type: 'uuid', name: 'order_id' })
   order_id!: string;
 
-  @ManyToOne(() => Order, { nullable: false, onDelete: 'RESTRICT' })
+  // LADO N: Pago (Pertenece a UNA orden) -> SINGULAR
+  @ManyToOne(() => Order, (order) => order.payments, {
+    nullable: false,
+    onDelete: 'RESTRICT',
+  })
   @JoinColumn({
     name: 'order_id',
     referencedColumnName: 'id_order',

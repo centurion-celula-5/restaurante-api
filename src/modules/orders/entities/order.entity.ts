@@ -6,8 +6,8 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
-  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import type { Relation } from 'typeorm';
@@ -15,10 +15,10 @@ import { User } from '../../users/entities/user.entity.js';
 import { Reservation } from '../../reservations/entities/reservation.entity.js';
 import { RestaurantTable } from '../../tables/entities/table.entity.js';
 import { OrderStatus } from '../enums/order-status.enum.js';
-import type { OrderItem } from './order-item.entity.js';
+import { Payment } from '../../payments/entities/payment.entity.js';
+import { OrderItem } from './order-item.entity.js';
 
 @Entity({ name: 'orders' })
-@Unique('UQ_orders_reservation_id', ['reservation_id'])
 export class Order {
   @PrimaryGeneratedColumn('uuid', { name: 'id_order' })
   id_order: string;
@@ -49,15 +49,23 @@ export class Order {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
   updated_at: Date;
 
-  @ManyToOne(() => User, { nullable: false, onDelete: 'RESTRICT' })
+  // LADO N: Orden (Fue creada por UN usuario) -> SINGULAR
+  @ManyToOne(() => User, (user) => user.orders, {
+    nullable: false,
+    onDelete: 'RESTRICT',
+  })
   @JoinColumn({
     name: 'created_by_user_id',
     referencedColumnName: 'id_user',
     foreignKeyConstraintName: 'fk_orders_users',
   })
-  created_by_user: Relation<User>;
+  createdByUser: Relation<User>;
 
-  @ManyToOne(() => RestaurantTable, { nullable: false, onDelete: 'RESTRICT' })
+  // LADO N: Orden (Pertenece a UNA mesa) -> SINGULAR
+  @ManyToOne(() => RestaurantTable, (table) => table.orders, {
+    nullable: false,
+    onDelete: 'RESTRICT',
+  })
   @JoinColumn({
     name: 'table_id',
     referencedColumnName: 'id_table',
@@ -65,8 +73,11 @@ export class Order {
   })
   table?: Relation<RestaurantTable>;
 
-  // The existing UNIQUE constraint enforces one order per reservation.
-  @ManyToOne(() => Reservation, { nullable: true, onDelete: 'SET NULL' })
+  // LADO 0..1: Orden (Puede provenir de UNA reserva) -> SINGULAR
+  @OneToOne(() => Reservation, (reservation) => reservation.order, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
   @JoinColumn({
     name: 'reservation_id',
     referencedColumnName: 'id_reservation',
@@ -74,6 +85,11 @@ export class Order {
   })
   reservation?: Relation<Reservation> | null;
 
-  @OneToMany('OrderItem', (orderItem: OrderItem) => orderItem.order)
-  order_items: Relation<OrderItem[]>;
+  // LADO 1: Orden (Tiene MUCHOS detalles) -> PLURAL
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
+  orderItems: Relation<OrderItem[]>;
+
+  // LADO 1: Orden (Tiene MUCHOS pagos) -> PLURAL
+  @OneToMany(() => Payment, (payment) => payment.order)
+  payments?: Relation<Payment[]>;
 }
