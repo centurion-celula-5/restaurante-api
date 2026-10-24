@@ -1,30 +1,31 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { CUSTOMER_LIMITS } from '../customer.constants.js';
 
 export class CreateCustomerDto {
-  @ApiProperty({ example: 'Carlos Perez', maxLength: 150 })
+  @ApiProperty({ example: 'Carlos Perez', maxLength: CUSTOMER_LIMITS.name })
   @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @IsString()
   @IsNotEmpty()
-  @MaxLength(150)
+  @MaxLength(CUSTOMER_LIMITS.name)
   nameCustomer: string;
 
-  @ApiProperty({ example: '3023828158', maxLength: 30 })
+  @ApiProperty({ example: '3023828158', maxLength: CUSTOMER_LIMITS.phone })
   @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @IsString()
   @IsNotEmpty()
-  @MaxLength(30)
+  @MaxLength(CUSTOMER_LIMITS.phone)
   phoneCustomer: string;
 
-  @ApiProperty({ example: 'pepe@gmail.com', maxLength: 150 })
+  @ApiProperty({ example: 'pepe@gmail.com', maxLength: CUSTOMER_LIMITS.email })
   @Transform(({ value }) =>
     typeof value === 'string' ? value.trim().toLowerCase() : value,
   )
   @IsString()
   @IsNotEmpty()
   @IsEmail({}, { message: 'emailCustomer debe ser un correo valido' })
-  @MaxLength(150)
+  @MaxLength(CUSTOMER_LIMITS.email)
   emailCustomer: string;
 }
 
